@@ -14,6 +14,7 @@ const App = () => {
   const [seeking, setSeeking] = useState(false)
   const [played, setPlayed] = useState(0)
   const [buffered, setBuffered] = useState(0)
+  const [playbackRate, setPlaybackRate] = useState(1)
 
   const handleProgress = (state) => {
     if (!seeking) {
@@ -26,44 +27,53 @@ const App = () => {
     setDuration(dur)
   }
 
-  // const formatTime = (seconds) => {
-  //   const min = Math.floor(seconds / 60);
-  //   const sec = Math.floor(seconds % 60);
-  //   return `${min}:${sec < 10 ? "0" : ""}${sec}`;
-  // }
-  // const handlePlay = () => {
-  //   setIsPlaying(!isPlaying)
-  // }
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying)
+  }
 
-  // const handleMute = () => {
-  //   setIsMuted(!isMuted)
-  // }
+  const handleMute = () => {
+    setIsMuted(!isMuted)
+  }
 
-  // const handleVolume = (e) => {
-  //   setVolume(parseFloat(e.target.value))
-  // }
+  const handleVolumeChange = (e) => {
+    setVolume(parseFloat(e.target.value))
+  }
 
-  // const handleSeekMouseDown = () => setSeeking(true)
+  const handleSeekMouseDown = () => setSeeking(true)
 
-  // const handleSeekChange = (e) => {
-  //   setPlayed(parseFloat(e.target.value))
-  // }
+  const handleSeekChange = (e) => {
+    setPlayed(parseFloat(e.target.value))
+  }
 
-  // const handleSeekMouseUp = (e) => {
-  //   setSeeking(false)
-  //   playerRef.current.seekTo(parseFloat(e.target.value))
-  // }
+  const handleSeekMouseUp = (e) => {
+    setSeeking(false)
+    if (playerRef.current) {
+      playerRef.current.seekTo(parseFloat(e.target.value))
+    }
+  }
 
-  // const volumePercentage = volume * 100;
+  const handleFastForward = () => {
+    if (playerRef.current) {
+      playerRef.current.seekTo(played + 10)
+    }
+  }
+
+  const handleRewind = () => {
+    if (playerRef.current) {
+      playerRef.current.seekTo(played - 10)
+    }
+  }
+
+  const handlePlaybackRateChange = (e) => {
+    setPlaybackRate(parseFloat(e.target.value))
+  }
+
   return (
     <div>
       <Navbar />
 
       <div className="app">
         <div className="player-container" ref={containerRef}>
-
-
-
           {/* VIDEO */}
           <ReactPlayer
             ref={playerRef}
@@ -71,11 +81,13 @@ const App = () => {
             playing={isPlaying}
             muted={isMuted}
             volume={volume}
+            playbackRate={playbackRate}
             width="100%"
             height="100%"
             onProgress={handleProgress}
             onDuration={handleDuration}
             className="react-player"
+
           />
 
           {/* FOOTER */}
@@ -83,9 +95,24 @@ const App = () => {
 
         </div>
       </div>
-      <Footer />
+      <Footer
+        isPlaying={isPlaying}
+        isMuted={isMuted}
+        volume={volume}
+        duration={duration}
+        played={played}
+        playbackRate={playbackRate}
+        onPlayPause={handlePlayPause}
+        onMute={handleMute}
+        onVolumeChange={handleVolumeChange}
+        onSeekMouseDown={handleSeekMouseDown}
+        onSeekChange={handleSeekChange}
+        onSeekMouseUp={handleSeekMouseUp}
+        onFastForward={handleFastForward}
+        onRewind={handleRewind}
+        onPlaybackRateChange={handlePlaybackRateChange}
+      />
     </div>
-
   )
 }
 

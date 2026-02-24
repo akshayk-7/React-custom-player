@@ -1,47 +1,31 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { Play, Pause, Volume2, VolumeX, Settings, Maximize2, Minimize2, Shuffle, SkipBack, SkipForward } from 'lucide-react'
 
-const Footer = () => {
-    const playerRef = useRef(null)
-    const [volume, setVolume] = useState(0.5)
-    const [isPlaying, setIsPlaying] = useState(false)
-    const [isMuted, setIsMuted] = useState(false)
-    const [duration, setDuration] = useState(0)
-    const [seeking, setSeeking] = useState(false)
-    const [played, setPlayed] = useState(0)
-
-
-
+const Footer = ({
+    isPlaying,
+    isMuted,
+    volume,
+    duration,
+    played,
+    playbackRate,
+    onPlayPause,
+    onMute,
+    onVolumeChange,
+    onSeekMouseDown,
+    onSeekChange,
+    onSeekMouseUp,
+    onFastForward,
+    onRewind,
+    onPlaybackRateChange
+}) => {
     const formatTime = (seconds) => {
+        if (isNaN(seconds)) return "0:00";
         const min = Math.floor(seconds / 60);
         const sec = Math.floor(seconds % 60);
         return `${min}:${sec < 10 ? "0" : ""}${sec}`;
     }
-    const handlePlay = () => {
-        setIsPlaying(!isPlaying)
-    }
-
-    const handleMute = () => {
-        setIsMuted(!isMuted)
-    }
-
-    const handleVolume = (e) => {
-        setVolume(parseFloat(e.target.value))
-    }
-
-    const handleSeekMouseDown = () => setSeeking(true)
-
-    const handleSeekChange = (e) => {
-        setPlayed(parseFloat(e.target.value))
-    }
-
-    const handleSeekMouseUp = (e) => {
-        setSeeking(false)
-        playerRef.current.seekTo(parseFloat(e.target.value))
-    }
 
     return (
-
         <div className="footer">
             {/* Progress */}
             <div className="progress-container">
@@ -51,12 +35,17 @@ const Footer = () => {
                     <input
                         type="range"
                         min={0}
-                        max={duration}
+                        max={duration || 0}
                         step={0.1}
                         value={played}
-                        onMouseDown={handleSeekMouseDown}
-                        onChange={handleSeekChange}
-                        onMouseUp={handleSeekMouseUp}
+                        onMouseDown={onSeekMouseDown}
+                        onChange={onSeekChange}
+                        onMouseUp={onSeekMouseUp}
+                        style={{
+                            background: duration
+                                ? `linear-gradient(to right, #1db954 ${(played / duration) * 100}%, rgba(255,255,255,0.4) ${(played / duration) * 100}%)`
+                                : "#ccc"
+                        }}
                     />
                 </div>
 
@@ -68,7 +57,7 @@ const Footer = () => {
 
                 {/* Left */}
                 <div className="left-controls">
-                    <button onClick={handleMute}>
+                    <button onClick={onMute}>
                         {isMuted ? <VolumeX /> : <Volume2 />}
                     </button>
 
@@ -76,30 +65,30 @@ const Footer = () => {
                         type="range"
                         min={0}
                         max={1}
-                        step={0.1}
+                        step={0.05}
                         value={volume}
-                        onChange={handleVolume}
+                        onChange={onVolumeChange}
                     />
                 </div>
 
                 {/* Center */}
                 <div className="center-controls">
-                    <button onClick={() => playerRef.current.seekTo(played - 10)}>
+                    <button onClick={onRewind}>
                         <SkipBack />
                     </button>
 
-                    <button id='play-pause' onClick={handlePlay}>
+                    <button id='play-pause' onClick={onPlayPause}>
                         {isPlaying ? <Pause /> : <Play />}
                     </button>
 
-                    <button onClick={() => playerRef.current.seekTo(played + 10)}>
+                    <button onClick={onFastForward}>
                         <SkipForward />
                     </button>
                 </div>
 
                 {/* Right */}
                 <div className="right-controls">
-                    <select>
+                    <select value={playbackRate} onChange={onPlaybackRateChange}>
                         <option value="0.5">0.5x</option>
                         <option value="1">1x</option>
                         <option value="1.5">1.5x</option>
