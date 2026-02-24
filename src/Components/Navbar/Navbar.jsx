@@ -1,6 +1,8 @@
 import React from 'react'
+import { Settings, Maximize2, Minimize2 } from 'lucide-react'
 
-const Navbar = () => {
+
+const Navbar = ({ isFullScreen, onToggleFullScreen }) => {
     return (
         <>
             {/* NAVBAR */}
@@ -10,8 +12,10 @@ const Navbar = () => {
                     <span className="video-title">Custom Video Player </span>
                 </div>
                 <div className="nav-right">
-                    <button className="icon-btn">⚙</button>
-                    <button className="icon-btn">⛶</button>
+                    <button className="icon-btn"><Settings /></button>
+                    <button className="icon-btn" onClick={onToggleFullScreen}>
+                        {isFullScreen ? <Minimize2 /> : <Maximize2 />}
+                    </button>
                 </div>
             </div>
         </>

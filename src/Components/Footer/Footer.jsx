@@ -1,23 +1,7 @@
 import React from 'react'
 import { Play, Pause, Volume2, VolumeX, Settings, Maximize2, Minimize2, Shuffle, SkipBack, SkipForward } from 'lucide-react'
 
-const Footer = ({
-    isPlaying,
-    isMuted,
-    volume,
-    duration,
-    played,
-    playbackRate,
-    onPlayPause,
-    onMute,
-    onVolumeChange,
-    onSeekMouseDown,
-    onSeekChange,
-    onSeekMouseUp,
-    onFastForward,
-    onRewind,
-    onPlaybackRateChange
-}) => {
+const Footer = ({ isPlaying, isMuted, volume, duration, played, playbackRate, onPlayPause, onMute, onVolumeChange, onSeekMouseDown, onSeekChange, onSeekMouseUp, onFastForward, onRewind, onPlaybackRateChange }) => {
     const formatTime = (seconds) => {
         if (isNaN(seconds)) return "0:00";
         const min = Math.floor(seconds / 60);

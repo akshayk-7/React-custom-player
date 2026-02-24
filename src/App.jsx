@@ -16,6 +16,7 @@ const App = () => {
   const [buffered, setBuffered] = useState(0)
   const [playbackRate, setPlaybackRate] = useState(1)
 
+
   const handleProgress = (state) => {
     if (!seeking) {
       setPlayed(state.playedSeconds)
@@ -68,9 +69,14 @@ const App = () => {
     setPlaybackRate(parseFloat(e.target.value))
   }
 
+  const [isFullScreen, setIsFullScreen] = useState(false)
+
+  const toggleFullScreen = () => {
+    setIsFullScreen(!isFullScreen)
+  }
   return (
     <div>
-      <Navbar />
+      <Navbar isFullScreen={isFullScreen} onToggleFullScreen={toggleFullScreen} />
 
       <div className="app">
         <div className="player-container" ref={containerRef}>
@@ -87,14 +93,10 @@ const App = () => {
             onProgress={handleProgress}
             onDuration={handleDuration}
             className="react-player"
-
           />
-
-          {/* FOOTER */}
-
-
         </div>
       </div>
+      {/* FOOTER */}
       <Footer
         isPlaying={isPlaying}
         isMuted={isMuted}
